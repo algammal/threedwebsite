@@ -1,0 +1,410 @@
+.hero {
+  position: relative;
+
+  width: 100%;
+  height: 100vh;
+
+  overflow: hidden;
+
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+.backgroundGlow {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 520px;
+  height: 520px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: rgba(200, 169, 107, 0.12);
+
+  filter: blur(120px);
+
+  pointer-events: none;
+}
+
+/* ------------------------------
+   VIDEO
+------------------------------ */
+
+.heroVideo {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  z-index: 2;
+
+  width: 600px;
+  height: 780px;
+
+  transform: translate(-50%, -50%);
+
+  object-fit: cover;
+  object-position: center;
+
+  display: block;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  pointer-events: none;
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 48% 54% at center,
+    #000 55%,
+    rgba(0, 0, 0, 0.9) 68%,
+    rgba(0, 0, 0, 0.45) 82%,
+    transparent 96%
+  );
+
+  mask-image: radial-gradient(
+    ellipse 48% 54% at center,
+    #000 55%,
+    rgba(0, 0, 0, 0.9) 68%,
+    rgba(0, 0, 0, 0.45) 82%,
+    transparent 96%
+  );
+}
+
+/* ------------------------------
+   HERO INTRO
+------------------------------ */
+
+.heroContent {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  z-index: 3;
+
+  width: 100%;
+
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+
+  pointer-events: none;
+}
+
+.title {
+  margin: 0;
+
+  color: var(--color-text-primary);
+
+  font-family: "Grained", sans-serif;
+
+  font-size: clamp(64px, 10vw, 160px);
+
+  font-weight: 400;
+
+  line-height: 0.9;
+
+  letter-spacing: 0.18em;
+}
+
+.subtitle {
+  margin: 24px 0 0;
+
+  color: var(--color-text-secondary);
+
+  font-size: clamp(10px, 1vw, 14px);
+
+  font-weight: 500;
+
+  letter-spacing: 0.2em;
+
+  text-transform: uppercase;
+}
+
+/* ------------------------------
+   CHAPTERS
+------------------------------ */
+
+.chapter {
+  position: absolute;
+
+  z-index: 4;
+
+  pointer-events: none;
+}
+
+.chapterNumber {
+  display: block;
+
+  margin-bottom: 24px;
+
+  color: var(--color-accent);
+
+  font-size: 11px;
+
+  letter-spacing: 0.25em;
+}
+
+.chapter h2 {
+  margin: 0;
+
+  color: var(--color-text-primary);
+
+  font-family: "Grained", sans-serif;
+
+  font-size: clamp(56px, 8vw, 130px);
+
+  font-weight: 400;
+
+  line-height: 0.88;
+
+  letter-spacing: 0.04em;
+}
+
+.chapter p {
+  margin: 28px 0 0;
+
+  color: var(--color-text-secondary);
+
+  font-size: 11px;
+
+  letter-spacing: 0.25em;
+
+  text-transform: uppercase;
+}
+
+/* Chapter 02 */
+
+.chapterTwo {
+  top: 50%;
+  left: 10%;
+
+  transform: translateY(-50%);
+}
+
+/* Chapter 03 */
+
+.chapterThree {
+  top: 50%;
+  right: 10%;
+
+  transform: translateY(-50%);
+
+  text-align: right;
+}
+
+/* Chapter 04 */
+
+.chapterFour {
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+}
+
+/* ------------------------------
+   INDICATOR
+------------------------------ */
+
+.indicator {
+  position: absolute;
+
+  top: 50%;
+  right: 36px;
+
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+
+  transform: translateY(-50%);
+}
+
+.indicator span {
+  position: relative;
+
+  color: var(--color-text-muted);
+
+  font-size: 10px;
+
+  letter-spacing: 0.15em;
+
+  transition:
+    color 300ms ease,
+    transform 300ms ease;
+}
+
+.indicator span::before {
+  content: "";
+
+  position: absolute;
+
+  right: calc(100% + 10px);
+
+  top: 50%;
+
+  width: 0;
+
+  height: 1px;
+
+  transform: translateY(-50%);
+
+  background: var(--color-accent);
+
+  transition: width 300ms ease;
+}
+
+.indicator .activeChapter {
+  color: var(--color-text-primary);
+
+  transform: translateX(-4px);
+}
+
+.indicator .activeChapter::before {
+  width: 18px;
+}
+
+/* ------------------------------
+   SCROLL HINT
+------------------------------ */
+
+.scrollHint {
+  position: absolute;
+
+  bottom: 32px;
+  left: 50%;
+
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 10px;
+
+  transform: translateX(-50%);
+
+  color: var(--color-text-muted);
+
+  font-size: 9px;
+
+  letter-spacing: 0.3em;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 40px;
+
+  background: linear-gradient(
+    to bottom,
+    var(--color-text-muted),
+    transparent
+  );
+}
+
+/* ------------------------------
+   MOBILE
+------------------------------ */
+
+@media (max-width: 768px) {
+  .backgroundGlow {
+    width: 360px;
+    height: 360px;
+
+    filter: blur(100px);
+  }
+
+  .heroVideo {
+    width: 390px;
+    height: 620px;
+  }
+
+  .title {
+    font-size: clamp(58px, 18vw, 100px);
+
+    letter-spacing: 0.12em;
+  }
+
+  .subtitle {
+    width: 80%;
+
+    margin: 18px auto 0;
+
+    font-size: 9px;
+
+    line-height: 1.8;
+
+    letter-spacing: 0.18em;
+  }
+
+  .chapter {
+    width: 80%;
+  }
+
+  .chapterTwo {
+    top: 25%;
+    left: 10%;
+
+    transform: none;
+  }
+
+  .chapterThree {
+    top: auto;
+    right: 10%;
+    bottom: 25%;
+
+    transform: none;
+  }
+
+  .chapterFour {
+    width: 100%;
+
+    top: 50%;
+    left: 50%;
+  }
+
+  .chapter h2 {
+    font-size: clamp(48px, 15vw, 80px);
+  }
+
+  .chapter p {
+    font-size: 9px;
+
+    line-height: 1.8;
+  }
+
+  .indicator {
+    top: auto;
+    right: 50%;
+
+    bottom: 28px;
+
+    flex-direction: row;
+
+    gap: 12px;
+
+    transform: translateX(50%);
+  }
+
+  .indicator span::before {
+    display: none;
+  }
+
+  .indicator .activeChapter {
+    transform: none;
+  }
+
+  .scrollHint {
+    display: none;
+  }
+}

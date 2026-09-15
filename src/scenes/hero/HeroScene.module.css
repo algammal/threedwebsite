@@ -1,0 +1,83 @@
+.leftSide{
+    display:flex;
+    height: 100vh;
+    align-items:center;
+    width: 20%;
+    color: var(--color-text-primary);
+  font-family: "codystar", sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.leftSide p{
+    margin:0;
+}
+.title{
+    font-size:100px;
+    font-family: "raleway", sans-serif;
+}
+ .leftSide p.subtitle{
+    margin-left:10px;
+}
+.homeContainer{
+    padding:0px 20px;
+    display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.rightSide{
+    width:20%;
+}
+.center{
+    width:60%;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+.spot{
+    width: 400px;
+    height: 400px;
+    border-radius: 100%;
+    background: rgb(107 200 193 / 18%);
+    filter: blur(80px);
+    pointer-events: none;
+}
+
+.heroVideo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+
+  width: 600px;
+  height: 780px;
+
+  transform: translate(-50%, -50%);
+
+  object-fit: cover;
+  object-position: center;
+
+  display: block;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  pointer-events: none;
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 48% 54% at center,
+    #000 55%,
+    rgba(0, 0, 0, 0.9) 68%,
+    rgba(0, 0, 0, 0.45) 82%,
+    transparent 96%
+  );
+
+  mask-image: radial-gradient(
+    ellipse 48% 54% at center,
+    #000 55%,
+    rgba(0, 0, 0, 0.9) 68%,
+    rgba(0, 0, 0, 0.45) 82%,
+    transparent 96%
+  );
+}

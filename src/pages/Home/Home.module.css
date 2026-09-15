@@ -1,0 +1,6 @@
+.homeContainer{
+    padding:0px 20px;
+    display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
