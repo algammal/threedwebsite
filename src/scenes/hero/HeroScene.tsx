@@ -20,10 +20,12 @@ function HeroScene() {
 
   const indicatorRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+ useLayoutEffect(() => {
   const scene = sceneRef.current;
 
   if (!scene) return;
+
+  const cleanupFns: Array<() => void> = [];
 
   const context = gsap.context(() => {
     const title = titleRef.current;
@@ -36,32 +38,42 @@ function HeroScene() {
 
     const indicator = indicatorRef.current;
 
+    if (
+      !title ||
+      !subtitle ||
+      !video ||
+      !chapterTwo ||
+      !chapterThree ||
+      !chapterFour ||
+      !indicator
+    ) {
+      return;
+    }
+
     /*
-     * ----------------------------------------
-     * INITIAL CHAPTER STATE
-     * ----------------------------------------
+     * ========================================
+     * CHAPTER NAVIGATION TIMES
+     * ========================================
      */
 
-    gsap.set([chapterTwo, chapterThree, chapterFour], {
-      opacity: 0,
-      y: 40,
-      pointerEvents: "none",
-    });
+    const chapterNavigationTimes = [
+      0,    // Chapter 01
+      2.8,  // Chapter 02
+      4.0,  // Chapter 03
+      5.0,  // Chapter 04
+    ];
 
     /*
-     * ----------------------------------------
+     * ========================================
      * INTRO ANIMATION
-     * ----------------------------------------
+     * ========================================
      */
 
     const animateIntro = () => {
-      if (!title || !subtitle) return;
-
       gsap.killTweensOf([title, subtitle]);
 
-      const introTimeline = gsap.timeline();
-
-      introTimeline
+      gsap
+        .timeline()
         .fromTo(
           title,
           {
@@ -98,264 +110,479 @@ function HeroScene() {
           "-=0.4",
         );
     };
+
+    /*
+     * ========================================
+     * INTRO HIDE
+     * ========================================
+     */
+
     const hideIntro = () => {
-  if (!title || !subtitle) return;
+      gsap.killTweensOf([title, subtitle]);
 
-  gsap.killTweensOf([title, subtitle]);
-
-  gsap.to([title, subtitle], {
-    opacity: 0,
-    y: -50,
-    filter: "blur(10px)",
-    duration: 0.35,
-    ease: "power2.inOut",
-  });
-};
+      gsap.to([title, subtitle], {
+        opacity: 0,
+        y: -50,
+        filter: "blur(10px)",
+        duration: 0.35,
+        ease: "power2.inOut",
+      });
+    };
 
     /*
-     * ----------------------------------------
-     * INITIAL INTRO
-     * ----------------------------------------
+     * ========================================
+     * INITIAL STATES
+     * ========================================
      */
 
-    animateIntro();
+    gsap.set(title, {
+      opacity: 0,
+      y: 20,
+      filter: "blur(8px)",
+    });
+
+    gsap.set(subtitle, {
+      opacity: 0,
+      y: 15,
+      filter: "blur(6px)",
+    });
+
+    gsap.set(chapterTwo, {
+      opacity: 0,
+      y: 40,
+    });
+
+    gsap.set(chapterThree, {
+      opacity: 0,
+      y: 40,
+    });
+
+    gsap.set(chapterFour, {
+      opacity: 0,
+      y: 40,
+    });
 
     /*
-     * ----------------------------------------
-     * CHAPTER TRACKING
-     * ----------------------------------------
+     * ========================================
+     * MAIN TIMELINE
+     * ========================================
+     *
+     * Build the complete timeline first.
+     * ScrollTrigger is created afterwards.
      */
 
-    let previousChapter = 0;
+    const timeline = gsap.timeline();
 
     /*
-     * ----------------------------------------
-     * CINEMATIC SCROLL TIMELINE
-     * ----------------------------------------
+     * ========================================
+     * CHAPTER 01
+     * ========================================
      */
 
-    const timeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: scene,
-        start: "top top",
-        end: "+=3200",
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-
-       onUpdate: (self) => {
-  if (!indicator) return;
-
-  const chapters =
-    indicator.querySelectorAll<HTMLElement>(
-      "[data-chapter]",
+    timeline.to(
+      title,
+      {
+        opacity: 1,
+        duration: 0.1,
+      },
+      0,
     );
 
-  const progress = self.progress;
-
-  let activeIndex = 0;
-
-  if (progress >= 0.75) {
-    activeIndex = 3;
-  } else if (progress >= 0.5) {
-    activeIndex = 2;
-  } else if (progress >= 0.25) {
-    activeIndex = 1;
-  }
-
-  chapters.forEach((chapter, index) => {
-    chapter.classList.toggle(
-      styles.activeChapter,
-      index === activeIndex,
+    timeline.to(
+      subtitle,
+      {
+        opacity: 1,
+        duration: 0.1,
+      },
+      0,
     );
-  });
 
-  /*
-   * Entering Chapter 01
-   */
-  if (
-    activeIndex === 0 &&
-    previousChapter !== 0 &&
-    self.direction === -1
-  ) {
-    animateIntro();
-  }
+    /*
+     * ========================================
+     * VIDEO — CHAPTER 01
+     * ========================================
+     */
 
-  /*
-   * Leaving Chapter 01
-   */
-  if (
-    previousChapter === 0 &&
-    activeIndex !== 0 &&
-    self.direction === 1
-  ) {
-    hideIntro();
-  }
+    timeline.to(
+      video,
+      {
+        scale: 1.08,
+        y: -30,
+        opacity: 0.8,
+        duration: 1,
+        ease: "power2.inOut",
+      },
+      1,
+    );
 
-  previousChapter = activeIndex;
-},
+    /*
+     * ========================================
+     * INTRO OUT
+     * ========================================
+     */
+
+    timeline.to(
+      [title, subtitle],
+      {
+        opacity: 0,
+        y: -50,
+        filter: "blur(10px)",
+        duration: 0.5,
+        ease: "power2.inOut",
+      },
+      1,
+    );
+
+    /*
+     * ========================================
+     * CHAPTER 02
+     * ========================================
+     */
+
+    timeline.to(
+      chapterTwo,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      },
+      2,
+    );
+
+    timeline.to(
+      video,
+      {
+        x: 100,
+        scale: 1.15,
+        duration: 1,
+        ease: "power2.inOut",
+      },
+      2,
+    );
+
+    /*
+     * ========================================
+     * CHAPTER 03
+     * ========================================
+     */
+
+    timeline.to(
+      chapterTwo,
+      {
+        opacity: 0,
+        y: -40,
+        duration: 0.6,
+        ease: "power2.inOut",
+      },
+      3,
+    );
+
+    timeline.to(
+      chapterThree,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      },
+      3.2,
+    );
+
+    timeline.to(
+      video,
+      {
+        x: -100,
+        scale: 1.2,
+        duration: 1,
+        ease: "power2.inOut",
+      },
+      3.2,
+    );
+
+    /*
+     * ========================================
+     * CHAPTER 04
+     * ========================================
+     */
+
+    timeline.to(
+      chapterThree,
+      {
+        opacity: 0,
+        y: -40,
+        duration: 0.6,
+        ease: "power2.inOut",
+      },
+      4,
+    );
+
+    timeline.to(
+      chapterFour,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      },
+      4.2,
+    );
+
+    timeline.to(
+      video,
+      {
+        scale: 1.3,
+        opacity: 0.25,
+        y: -80,
+        duration: 1,
+        ease: "power2.inOut",
+      },
+      4.2,
+    );
+
+    /*
+     * ========================================
+     * CHAPTER STATE
+     * ========================================
+     */
+
+    let currentChapter = -1;
+
+    /*
+     * ========================================
+     * SCROLL TRIGGER
+     * ========================================
+     */
+
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: scene,
+
+      start: "top top",
+
+      /*
+       * Longer scroll distance gives the
+       * cinematic animation more breathing room.
+       */
+      end: "+=6000",
+
+      animation: timeline,
+
+      scrub: true,
+
+      pin: true,
+
+      anticipatePin: 1,
+
+      invalidateOnRefresh: true,
+
+      onUpdate: (self) => {
+        const duration = timeline.duration();
+
+        if (!duration) return;
+
+        const progress = self.progress;
+
+        /*
+         * ------------------------------------
+         * CONVERT SCROLL PROGRESS TO
+         * TIMELINE TIME
+         * ------------------------------------
+         */
+
+        const currentTime = progress * duration;
+
+        /*
+         * ------------------------------------
+         * CHAPTER THRESHOLDS
+         * ------------------------------------
+         *
+         * We use the midpoint between chapters
+         * instead of exact positions.
+         *
+         * This prevents indicator flickering
+         * around chapter boundaries.
+         */
+
+        const chapter2Threshold =
+          (chapterNavigationTimes[0] +
+            chapterNavigationTimes[1]) /
+          2;
+
+        const chapter3Threshold =
+          (chapterNavigationTimes[1] +
+            chapterNavigationTimes[2]) /
+          2;
+
+        const chapter4Threshold =
+          (chapterNavigationTimes[2] +
+            chapterNavigationTimes[3]) /
+          2;
+
+        let activeIndex = 0;
+
+        if (currentTime >= chapter4Threshold) {
+          activeIndex = 3;
+        } else if (currentTime >= chapter3Threshold) {
+          activeIndex = 2;
+        } else if (currentTime >= chapter2Threshold) {
+          activeIndex = 1;
+        }
+
+        /*
+         * ------------------------------------
+         * UPDATE INDICATOR
+         * ------------------------------------
+         */
+
+        const chapters =
+          indicator.querySelectorAll<HTMLButtonElement>(
+            "[data-chapter]",
+          );
+
+        chapters.forEach((chapter, index) => {
+          chapter.classList.toggle(
+            styles.activeChapter,
+            index === activeIndex,
+          );
+        });
+
+        /*
+         * ------------------------------------
+         * CHAPTER CHANGED
+         * ------------------------------------
+         */
+
+        if (activeIndex !== currentChapter) {
+          /*
+           * CHAPTER 01
+           *
+           * Re-show the intro whenever we
+           * return to Chapter 01.
+           */
+
+          if (activeIndex === 0) {
+            animateIntro();
+          } else {
+            /*
+             * CHAPTER 02 / 03 / 04
+             *
+             * Make absolutely sure the intro
+             * is hidden.
+             */
+
+            hideIntro();
+          }
+
+          currentChapter = activeIndex;
+        }
       },
     });
 
     /*
-     * ----------------------------------------
-     * CHAPTER 01 → CHAPTER 02
-     * ----------------------------------------
+     * ========================================
+     * INITIAL INTRO
+     * ========================================
      */
 
-    timeline
-      .to(
-        [title, subtitle],
-        {
-          opacity: 0,
-          y: -50,
-          filter: "blur(10px)",
-          duration: 1,
-          ease: "power2.inOut",
-        },
-        1,
-      )
-      .to(
-        video,
-        {
-          scale: 1.08,
-          y: -30,
-          opacity: 0.8,
-          duration: 1.2,
-          ease: "power2.inOut",
-        },
-        1,
-      );
+    animateIntro();
 
     /*
-     * ----------------------------------------
-     * CHAPTER 02
-     * ----------------------------------------
+     * ========================================
+     * CLICKABLE INDICATORS
+     * ========================================
      */
 
-    timeline
-      .to(
-        chapterTwo,
-        {
-          opacity: 1,
-          y: 0,
-          pointerEvents: "auto",
-          duration: 0.8,
-          ease: "power3.out",
-        },
-        2,
-      )
-      .to(
-        video,
-        {
-          x: 100,
-          scale: 1.15,
-          duration: 1.2,
-          ease: "power2.inOut",
-        },
-        2,
+    const chapters =
+      indicator.querySelectorAll<HTMLButtonElement>(
+        "[data-chapter]",
       );
 
-    /*
-     * ----------------------------------------
-     * CHAPTER 02 → CHAPTER 03
-     * ----------------------------------------
-     */
+    chapters.forEach((chapter) => {
+      const handleClick = () => {
+        const chapterIndex = Number(
+          chapter.dataset.chapter,
+        );
 
-    timeline
-      .to(
-        chapterTwo,
-        {
-          opacity: 0,
-          y: -30,
-          pointerEvents: "none",
-          duration: 0.6,
-          ease: "power2.in",
-        },
-        3,
-      )
-      .to(
-        chapterThree,
-        {
-          opacity: 1,
-          y: 0,
-          pointerEvents: "auto",
-          duration: 0.8,
-          ease: "power3.out",
-        },
-        3.2,
-      )
-      .to(
-        video,
-        {
-          x: -100,
-          scale: 1.2,
-          duration: 1.2,
-          ease: "power2.inOut",
-        },
-        3.2,
+        const targetTime =
+          chapterNavigationTimes[chapterIndex];
+
+        if (targetTime === undefined) {
+          return;
+        }
+
+        const duration = timeline.duration();
+
+        if (!duration) {
+          return;
+        }
+
+        /*
+         * Convert timeline time into
+         * normalized ScrollTrigger progress.
+         */
+
+        const targetProgress =
+          targetTime / duration;
+
+        /*
+         * Convert progress into document
+         * scroll position.
+         */
+
+        const targetScroll =
+          scrollTrigger.start +
+          (scrollTrigger.end -
+            scrollTrigger.start) *
+            targetProgress;
+
+        /*
+         * Navigate smoothly.
+         */
+
+        window.scrollTo({
+          top: targetScroll,
+          behavior: "smooth",
+        });
+      };
+
+      chapter.addEventListener(
+        "click",
+        handleClick,
       );
 
-    /*
-     * ----------------------------------------
-     * CHAPTER 03 → CHAPTER 04
-     * ----------------------------------------
-     */
-
-    timeline
-      .to(
-        chapterThree,
-        {
-          opacity: 0,
-          y: -30,
-          pointerEvents: "none",
-          duration: 0.6,
-          ease: "power2.in",
-        },
-        4,
-      )
-      .to(
-        chapterFour,
-        {
-          opacity: 1,
-          y: 0,
-          pointerEvents: "auto",
-          duration: 0.8,
-          ease: "power3.out",
-        },
-        4.2,
-      )
-      .to(
-        video,
-        {
-          scale: 1.3,
-          opacity: 0.25,
-          y: -80,
-          duration: 1.2,
-          ease: "power2.inOut",
-        },
-        4.2,
-      );
-
-    /*
-     * ----------------------------------------
-     * VIDEO PLAYBACK
-     * ----------------------------------------
-     */
-
-    if (video) {
-      video.play().catch(() => {
-        // Browser may block autoplay until interaction.
+      cleanupFns.push(() => {
+        chapter.removeEventListener(
+          "click",
+          handleClick,
+        );
       });
-    }
+    });
+
+    /*
+     * ========================================
+     * VIDEO PLAYBACK
+     * ========================================
+     */
+
+    video.play().catch(() => {
+      // Browser autoplay may be blocked.
+    });
   }, scene);
 
+  /*
+   * ========================================
+   * CLEANUP
+   * ========================================
+   */
+
   return () => {
+    cleanupFns.forEach((cleanup) => {
+      cleanup();
+    });
+
     context.revert();
   };
 }, []);
-
   return (
     <section ref={sceneRef} className={styles.scene}>
       <div className={styles.homeContainer}>
@@ -457,16 +684,35 @@ function HeroScene() {
         ---------------------------------------- */}
 
         <div ref={indicatorRef} className={styles.indicator}>
-          <span data-chapter className={styles.activeChapter}>
-            01
-          </span>
+  <button
+    type="button"
+    data-chapter="0"
+    className={styles.activeChapter}
+  >
+    01
+  </button>
 
-          <span data-chapter>02</span>
+  <button
+    type="button"
+    data-chapter="1"
+  >
+    02
+  </button>
 
-          <span data-chapter>03</span>
+  <button
+    type="button"
+    data-chapter="2"
+  >
+    03
+  </button>
 
-          <span data-chapter>04</span>
-        </div>
+  <button
+    type="button"
+    data-chapter="3"
+  >
+    04
+  </button>
+</div>
 
         {/* ----------------------------------------
             SCROLL HINT
