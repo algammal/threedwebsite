@@ -19,6 +19,7 @@
 }
  .leftSide p.subtitle{
     margin-left:10px;
+    font-size: 20px;
 }
 .homeContainer{
     padding:0px 20px;
@@ -31,7 +32,6 @@
 }
 .center{
     width:60%;
-    display: flex;
     justify-content:center;
     align-items:center;
 }
@@ -80,4 +80,97 @@
     rgba(0, 0, 0, 0.45) 82%,
     transparent 96%
   );
+}
+.indicator {
+  position: absolute;
+  top: 50%;
+  right: 32px;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+
+  transform: translateY(-50%);
+}
+
+.indicator span {
+  display: block;
+
+  color: var(--color-text-muted);
+  
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+
+  transition:
+    color 300ms ease,
+    transform 300ms ease;
+}
+
+.indicator .activeChapter {
+  color: var(--color-text-primary);
+  transform: translateX(-4px);
+}
+.chapter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  z-index: 6;
+
+  width: min(700px, 70vw);
+
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+
+  pointer-events: none;
+  font-size: 30px;
+}
+
+.scrollHint {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  transform: translateX(-50%);
+
+  color: var(--color-text-muted);
+  
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.25em;
+  white-space: nowrap;
+}
+
+.scrollLine {
+  display: block;
+  width: 1px;
+  height: 38px;
+
+  background: var(--color-text-muted);
+
+  transform-origin: top;
+  animation: scrollLine 2s ease-in-out infinite;
+}
+
+@keyframes scrollLine {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
