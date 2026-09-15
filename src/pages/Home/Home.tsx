@@ -1,4 +1,4 @@
-import MainLayout from "../../layouts/MainLayout/MainLayout";
+import MainLayout from "../../layouts/mainLayout/MainLayout";
 import HeroScene from "../../scenes/hero/HeroScene"
 
 function Home() {
